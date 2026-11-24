@@ -1,0 +1,6 @@
+{
+  "name": "TaskFlow Core",
+  "description": "Focused, minimalist task management and personal productivity workspace.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
