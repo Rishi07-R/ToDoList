@@ -283,7 +283,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-1 pt-1">
+            <div className="flex items-center gap-1 pt-0.5">
               <button
                 type="button"
                 onClick={onOpenShortcuts}
