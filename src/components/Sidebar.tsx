@@ -9,7 +9,6 @@ import {
   FolderKanban,
   HelpCircle,
   Inbox,
-  RotateCcw,
   Sun,
   User,
   X,
@@ -32,7 +31,6 @@ interface SidebarProps {
   mobileOpen: boolean;
   onCloseMobile: () => void;
   onOpenShortcuts: () => void;
-  onResetDemo: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -44,7 +42,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   mobileOpen,
   onCloseMobile,
   onOpenShortcuts,
-  onResetDemo,
 }) => {
   const primaryItems: {
     id: NavSection;
@@ -283,23 +280,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-1 pt-0.5">
+            <div className="pt-0.5">
               <button
                 type="button"
                 onClick={onOpenShortcuts}
-                className="flex-1 flex items-center justify-center gap-1.5 h-8 px-2.5 rounded-lg text-[12px] font-medium text-[#64748B] hover:text-[#0F172A] hover:bg-[#F8FAFC] border border-transparent hover:border-[#E2E8F0] transition-colors whitespace-nowrap"
+                className="w-full flex items-center justify-center gap-1.5 h-8 px-2.5 rounded-lg text-[12px] font-medium text-[#64748B] hover:text-[#0F172A] hover:bg-[#F8FAFC] border border-transparent hover:border-[#E2E8F0] transition-colors whitespace-nowrap"
               >
                 <HelpCircle className="w-3.5 h-3.5" strokeWidth={1.75} />
                 <span>Shortcuts</span>
-              </button>
-              <button
-                type="button"
-                onClick={onResetDemo}
-                className="flex-1 flex items-center justify-center gap-1.5 h-8 px-2.5 rounded-lg text-[12px] font-medium text-[#64748B] hover:text-[#0F172A] hover:bg-[#F8FAFC] border border-transparent hover:border-[#E2E8F0] transition-colors whitespace-nowrap"
-                title="Restore sample tasks"
-              >
-                <RotateCcw className="w-3.5 h-3.5" strokeWidth={1.75} />
-                <span>Reset data</span>
               </button>
             </div>
           </>

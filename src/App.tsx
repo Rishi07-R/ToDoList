@@ -81,7 +81,6 @@ export default function App() {
     toggleSubtask,
     deleteSubtask,
     clearCompletedInScope,
-    resetDemoTasks,
     undoLastAction,
     dismissUndo,
   } = useTaskStore();
@@ -224,7 +223,6 @@ export default function App() {
         mobileOpen={mobileMenuOpen}
         onCloseMobile={() => setMobileMenuOpen(false)}
         onOpenShortcuts={() => setShortcutsOpen(true)}
-        onResetDemo={resetDemoTasks}
       />
 
       {/* Main Workspace Area */}

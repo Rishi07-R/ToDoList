@@ -19,19 +19,16 @@ const STORAGE_KEY = 'taskflow_core_tasks_v1';
 function loadStoredTasks(): Task[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      const seeded = createInitialTasks();
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(seeded));
-      return seeded;
-    }
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed) && parsed.length > 0) {
-      return parsed;
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        return parsed;
+      }
     }
   } catch {
-    // Fallback to initial seeded tasks if storage is unavailable
+    // Fallback to empty task list
   }
-  return createInitialTasks();
+  return [];
 }
 
 export interface UndoState {
@@ -92,17 +89,9 @@ export function useTaskStore() {
         throw error;
       }
 
-      if (data && data.length > 0) {
+      if (data) {
         const loaded = data.map(dbRowToTask);
         setTasks(loaded);
-        setIsCloudConnected(true);
-        setLastSyncTime(new Date());
-      } else {
-        // Table is empty in Supabase. Seed initial tasks to Supabase so it's a real working database from the start!
-        const initial = createInitialTasks();
-        const rows = initial.map((t) => taskToDbRow(t));
-        await client.from('tasks').upsert(rows, { onConflict: 'id' });
-        setTasks(initial);
         setIsCloudConnected(true);
         setLastSyncTime(new Date());
       }
@@ -521,26 +510,27 @@ export function useTaskStore() {
     }
   }, []);
 
-  const resetDemoTasks = useCallback(() => {
-    const demo = createInitialTasks();
+  const clearAllTasks = useCallback(() => {
     const prevTasks = tasksRef.current;
+    if (prevTasks.length === 0) return;
     setUndoState({
-      message: 'Restored default workspace tasks',
+      message: 'Cleared all tasks',
       previousTasks: prevTasks,
     });
-    setTasks(demo);
+    setTasks([]);
 
     const client = getSupabaseClient();
     if (client) {
-      const rows = demo.map((t) => taskToDbRow(t));
+      const ids = prevTasks.map((t) => t.id);
       Promise.resolve(
         client
           .from('tasks')
-          .upsert(rows, { onConflict: 'id' })
+          .delete()
+          .in('id', ids)
       ).then(({ error }: { error: any }) => {
         if (error) {
-          console.error('Supabase reset demo error:', error);
-          setSyncError(`Reset error: ${error.message}`);
+          console.error('Supabase clear error:', error);
+          setSyncError(`Clear error: ${error.message}`);
         } else {
           setLastSyncTime(new Date());
         }
@@ -611,7 +601,7 @@ export function useTaskStore() {
     toggleSubtask,
     deleteSubtask,
     clearCompletedInScope,
-    resetDemoTasks,
+    clearAllTasks,
     undoLastAction,
     dismissUndo,
     refreshFromSupabase,
